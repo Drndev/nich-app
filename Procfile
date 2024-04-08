@@ -1,2 +1,2 @@
-web: gunicorn app:NICHGit
+web: gunicorn NICHGit:app
 
