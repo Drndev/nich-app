@@ -2,7 +2,8 @@
 # coding: utf-8
 
 # In[2]:
-
+# Create Dash app instance
+app = dash.Dash(__NICHGit__)
 
 import dash
 from dash import dcc, html
@@ -94,37 +95,6 @@ if __name__ == '__main__':
     app.run_server(debug=True)
 
 
-# In[ ]:
-
-
-
-
-
-# In[1]:
-
-
-pip freeze
-
-
-# In[2]:
-
-
-jupyter nbconvert --to script MyDashApp.ipynb
-
-
-# In[3]:
-
-
-print(os.getcwd())
-
-
-# In[4]:
-
-
-pwd
-
-
-# In[ ]:
 
 
 
