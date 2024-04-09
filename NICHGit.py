@@ -14,6 +14,9 @@ import pandas as pd
 MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZGFyZGV2IiwiYSI6ImNsdWNnbTltcDExdmYyam5pazdtOGZ1MGwifQ.IBDBUPNj10UCQ9jMTV-pjA"
 px.set_mapbox_access_token(MAPBOX_ACCESS_TOKEN)
 
+# Reference the underlying flask app (Used by gunicorn webserver in Heroku production deployment)
+server = app.server 
+
 # Read in the data
 df = pd.read_csv('Downloads/Finished/Total.csv', encoding='ISO-8859-1')
 df['Latitude'] = pd.to_numeric(df['Latitude'], errors='coerce')
