@@ -9,6 +9,8 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
 import pandas as pd
+import requests
+
 
 # Your Mapbox access token
 MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZGFyZGV2IiwiYSI6ImNsdWNnbTltcDExdmYyam5pazdtOGZ1MGwifQ.IBDBUPNj10UCQ9jMTV-pjA"
@@ -17,8 +19,21 @@ px.set_mapbox_access_token(MAPBOX_ACCESS_TOKEN)
 # Reference the underlying flask app (Used by gunicorn webserver in Heroku production deployment)
 server = app.server 
 
+
+# Shareable link to the CSV file on Google Drive
+google_drive_link = "https://docs.google.com/spreadsheets/d/1AiK_HFMKW20jM9fbSVRSIu2cNa0nDQWN/edit?usp=drive_link&ouid=104157118977035267335&rtpof=true&sd=true"
+
+# Download the file from the link
+response = requests.get(google_drive_link)
+
+# Save the downloaded content to a local file
+with open("total.csv", "wb") as f:
+    f.write(response.content)
+
+# Read the CSV file into a Pandas DataFrame
+df = pd.read_csv("Total.csv", encoding='ISO-8859-1')
 # Read in the data
-df = pd.read_csv('Downloads/Finished/Total.csv', encoding='ISO-8859-1')
+#df = pd.read_csv('Downloads/Finished/Total.csv', encoding='ISO-8859-1')
 df['Latitude'] = pd.to_numeric(df['Latitude'], errors='coerce')
 df['Longitude'] = pd.to_numeric(df['Longitude'], errors='coerce')
 df.dropna(subset=['Latitude', 'Longitude'], inplace=True)
