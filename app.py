@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
@@ -32,16 +29,17 @@ df.dropna(subset=['Latitude', 'Longitude'], inplace=True)
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
-server = app.server
 
 # Define the layout of the app
 app.layout = html.Div([
     html.H1("Mapping of Companies House Northern Ireland", style={'font-family': 'Roboto', 'font-weight': '500', 'textAlign': 'center'}),
+    # Added a Div for displaying the count of plotted points
+    html.Div(id="points-count", style={'textAlign': 'center', 'margin': '10px'}),
     html.Div(style={'display': 'flex', 'flexDirection': 'row', 'height': 'calc(100vh - 40px)'}, children=[
         # Map container
         html.Div(style={'flex': 3}, children=[
             dcc.Graph(id="map", style={'height': '100%'})
-        ]), 
+        ]),
         # Filters container with adjusted width
         html.Div(style={
             'flex': 1,
@@ -76,9 +74,10 @@ app.layout = html.Div([
     ])
 ], style={'padding': '20px', 'backgroundColor': '#f0f0f0', 'font-family': 'Roboto', 'height': '100vh', 'margin': '0'})
 
-# Callback to update the map based on filters
+# Callback to update the map and count of plotted points based on filters
 @app.callback(
-    Output('map', 'figure'),
+    [Output('map', 'figure'),
+     Output('points-count', 'children')],
     [Input('siccode-dropdown', 'value'),
      Input('companyname-dropdown', 'value')]
 )
@@ -96,12 +95,12 @@ def update_map(selected_siccodes, selected_companynames):
                             hover_name="CompanyName",
                             hover_data={"CompanyNumber": True, "SICCode": True, "RegAddress.AddressLine1": True},
                             zoom=7,
-                            mapbox_style="mapbox://styles/mapbox/satellite-streets-v12",
-                            title=f"NI Companies House - {point_count} Locations Plotted")
+                            mapbox_style="mapbox://styles/mapbox/satellite-streets-v12")
     fig.update_layout(mapbox_center={"lat": 54.637039, "lon": -6.627607},
                       margin={"r":0,"t":0,"l":0,"b":0}, autosize=True)
 
-    return fig
+    # Return both the figure and the count of plotted points to update the layout
+    return fig, f"Total Locations Plotted: {point_count}"
 
 # Run the app
 if __name__ == '__main__':
