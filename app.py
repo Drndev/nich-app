@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
-
-
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
@@ -11,11 +8,9 @@ import plotly.express as px
 import pandas as pd
 import requests
 
-
 # Your Mapbox access token
 MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZGFyZGV2IiwiYSI6ImNsdWNnbTltcDExdmYyam5pazdtOGZ1MGwifQ.IBDBUPNj10UCQ9jMTV-pjA"
 px.set_mapbox_access_token(MAPBOX_ACCESS_TOKEN)
-
 
 # Modified link for direct download from Google Drive
 google_drive_link = "https://drive.google.com/uc?export=download&id=1ZMR271ltgXgYfBNmzd4rb49H2IzpqJXx"
@@ -29,9 +24,6 @@ with open("Total.csv", "wb") as f:
 
 # Read the CSV file into a Pandas DataFrame
 df = pd.read_csv("Total.csv", encoding='ISO-8859-1', on_bad_lines='skip')
-
-# Inspect the DataFrame to confirm correct download and parsing
-print(df.columns)
 
 # Further processing...
 df['Latitude'] = pd.to_numeric(df['Latitude'], errors='coerce')
@@ -53,8 +45,8 @@ app.layout = html.Div([
         # Filters container with adjusted width
         html.Div(style={
             'flex': 1,
-            'flexBasis': '350px',  # The ideal or initial width
-            'maxWidth': '350px',  # Ensures the filter box doesn't grow beyond this width
+            'flexBasis': '350px',
+            'maxWidth': '350px',
             'marginLeft': '20px',
             'verticalAlign': 'top',
             'font-family': 'Roboto',
@@ -63,7 +55,7 @@ app.layout = html.Div([
             'borderRadius': '8px',
             'boxShadow': '0 2px 4px rgba(0,0,0,0.1)',
             'overflowY': 'auto',
-            'maxHeight': 'calc(100vh - 60px)'  # Max height to ensure it does not overflow the viewport
+            'maxHeight': 'calc(100vh - 60px)'
         }, children=[
             html.H2("Filters", style={'font-family': 'Roboto', 'font-weight': '500', 'textAlign': 'center'}),
             dcc.Dropdown(
@@ -97,12 +89,15 @@ def update_map(selected_siccodes, selected_companynames):
     if selected_companynames:
         filtered_df = filtered_df[filtered_df['CompanyName'].isin(selected_companynames)]
 
+    # Count the number of points to be plotted
+    point_count = len(filtered_df)
+
     fig = px.scatter_mapbox(filtered_df, lat="Latitude", lon="Longitude",
                             hover_name="CompanyName",
                             hover_data={"CompanyNumber": True, "SICCode": True, "RegAddress.AddressLine1": True},
                             zoom=7,
                             mapbox_style="mapbox://styles/mapbox/satellite-streets-v12",
-                            title="NI Companies House")
+                            title=f"NI Companies House - {point_count} Locations Plotted")
     fig.update_layout(mapbox_center={"lat": 54.637039, "lon": -6.627607},
                       margin={"r":0,"t":0,"l":0,"b":0}, autosize=True)
 
@@ -111,6 +106,3 @@ def update_map(selected_siccodes, selected_companynames):
 # Run the app
 if __name__ == '__main__':
     app.run_server(debug=True)
-
-
-
