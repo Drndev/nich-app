@@ -37,6 +37,7 @@ df.dropna(subset=['Latitude', 'Longitude'], inplace=True)
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
+server = app.server
 
 # Define the layout of the app
 app.layout = html.Div([
