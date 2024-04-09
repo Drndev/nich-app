@@ -24,7 +24,7 @@ google_drive_link = "https://docs.google.com/spreadsheets/d/1AiK_HFMKW20jM9fbSVR
 response = requests.get(google_drive_link)
 
 # Save the downloaded content to a local file
-with open("total.csv", "wb") as f:
+with open("Total.csv", "wb") as f:
     f.write(response.content)
 
 # Read the CSV file into a Pandas DataFrame
