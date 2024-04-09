@@ -21,7 +21,7 @@ server = app.server
 
 
 # Shareable link to the CSV file on Google Drive
-google_drive_link = "https://docs.google.com/spreadsheets/d/1AiK_HFMKW20jM9fbSVRSIu2cNa0nDQWN/edit?usp=drive_link&ouid=104157118977035267335&rtpof=true&sd=true"
+google_drive_link = "https://docs.google.com/spreadsheets/d/1AiK_HFMKW20jM9fbSVRSIu2cNa0nDQWN/edit?usp=sharing&ouid=104157118977035267335&rtpof=true&sd=true"
 
 # Download the file from the link
 response = requests.get(google_drive_link)
