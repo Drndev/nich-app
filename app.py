@@ -34,6 +34,42 @@ df.dropna(subset=['Latitude', 'Longitude'], inplace=True)
 app = dash.Dash(__name__)
 server = app.server
 
+#!/usr/bin/env python
+# coding: utf-8
+
+import dash
+from dash import dcc, html
+from dash.dependencies import Input, Output
+import plotly.express as px
+import pandas as pd
+import requests
+
+# Your Mapbox access token
+MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZGFyZGV2IiwiYSI6ImNsdWNnbTltcDExdmYyam5pazdtOGZ1MGwifQ.IBDBUPNj10UCQ9jMTV-pjA"
+px.set_mapbox_access_token(MAPBOX_ACCESS_TOKEN)
+
+# Modified link for direct download from Google Drive
+google_drive_link = "https://drive.google.com/uc?export=download&id=1ZMR271ltgXgYfBNmzd4rb49H2IzpqJXx"
+
+# Download the file from the link
+response = requests.get(google_drive_link)
+
+# Save the downloaded content to a local file
+with open("Total.csv", "wb") as f:
+    f.write(response.content)
+
+# Read the CSV file into a Pandas DataFrame
+df = pd.read_csv("Total.csv", encoding='ISO-8859-1', on_bad_lines='skip')
+
+# Further processing...
+df['Latitude'] = pd.to_numeric(df['Latitude'], errors='coerce')
+df['Longitude'] = pd.to_numeric(df['Longitude'], errors='coerce')
+df.dropna(subset=['Latitude', 'Longitude'], inplace=True)
+
+# Initialize the Dash app
+app = dash.Dash(__name__)
+server = app.server
+
 # Define the layout of the app
 app.layout = html.Div([
     html.H1("Mapping of Companies House Northern Ireland", style={'font-family': 'Roboto', 'font-weight': '500', 'textAlign': 'center'}),
