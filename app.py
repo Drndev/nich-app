@@ -73,6 +73,7 @@ server = app.server
 # Define the layout of the app
 app.layout = html.Div([
     html.H1("Mapping of Companies House Northern Ireland", style={'font-family': 'Roboto', 'font-weight': '500', 'textAlign': 'center'}),
+    html.Div(id='point-count', style={'textAlign': 'center'}),  # Div to display the point count
     html.Div(style={'display': 'flex', 'flexDirection': 'row', 'height': 'calc(100vh - 40px)'}, children=[
         # Map container
         html.Div(style={'flex': 3}, children=[
@@ -81,8 +82,8 @@ app.layout = html.Div([
         # Filters container with adjusted width
         html.Div(style={
             'flex': 1,
-            'flexBasis': '350px',
-            'maxWidth': '350px',
+            'flexBasis': '350px',  # The ideal/initial width
+            'maxWidth': '400px',  
             'marginLeft': '20px',
             'verticalAlign': 'top',
             'font-family': 'Roboto',
@@ -91,7 +92,7 @@ app.layout = html.Div([
             'borderRadius': '8px',
             'boxShadow': '0 2px 4px rgba(0,0,0,0.1)',
             'overflowY': 'auto',
-            'maxHeight': 'calc(100vh - 60px)'
+            'maxHeight': 'calc(100vh - 60px)'  # Max height to ensure it does not overflow the viewport
         }, children=[
             html.H2("Filters", style={'font-family': 'Roboto', 'font-weight': '500', 'textAlign': 'center'}),
             dcc.Dropdown(
@@ -112,9 +113,10 @@ app.layout = html.Div([
     ])
 ], style={'padding': '20px', 'backgroundColor': '#f0f0f0', 'font-family': 'Roboto', 'height': '100vh', 'margin': '0'})
 
-# Callback to update the map based on filters
+# Callback to update the map based on filters and display the point count
 @app.callback(
-    Output('map', 'figure'),
+    [Output('map', 'figure'),
+     Output('point-count', 'children')],
     [Input('siccode-dropdown', 'value'),
      Input('companyname-dropdown', 'value')]
 )
@@ -125,19 +127,17 @@ def update_map(selected_siccodes, selected_companynames):
     if selected_companynames:
         filtered_df = filtered_df[filtered_df['CompanyName'].isin(selected_companynames)]
 
-    # Count the number of points to be plotted
-    point_count = len(filtered_df)
-
     fig = px.scatter_mapbox(filtered_df, lat="Latitude", lon="Longitude",
                             hover_name="CompanyName",
                             hover_data={"CompanyNumber": True, "SICCode": True, "RegAddress.AddressLine1": True},
                             zoom=7,
                             mapbox_style="mapbox://styles/mapbox/satellite-streets-v12",
-                            title=f"NI Companies House - {point_count} Locations Plotted")
+                            title="NI Companies House")
     fig.update_layout(mapbox_center={"lat": 54.637039, "lon": -6.627607},
                       margin={"r":0,"t":0,"l":0,"b":0}, autosize=True)
 
-    return fig
+    point_count = f"Number of points plotted: {len(filtered_df)}"  # Generate point count string
+    return fig, point_count
 
 # Run the app
 if __name__ == '__main__':
