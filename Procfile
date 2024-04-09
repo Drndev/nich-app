@@ -1,1 +1,1 @@
-web:gunicorn app:NICHGit
+web: gunicorn app:server
