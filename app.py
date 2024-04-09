@@ -16,9 +16,6 @@ import requests
 MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZGFyZGV2IiwiYSI6ImNsdWNnbTltcDExdmYyam5pazdtOGZ1MGwifQ.IBDBUPNj10UCQ9jMTV-pjA"
 px.set_mapbox_access_token(MAPBOX_ACCESS_TOKEN)
 
-# Reference the underlying flask app (Used by gunicorn webserver in Heroku production deployment)
-server = app.server 
-
 
 # Shareable link to the CSV file on Google Drive
 google_drive_link = "https://docs.google.com/spreadsheets/d/1AiK_HFMKW20jM9fbSVRSIu2cNa0nDQWN/edit?usp=sharing&ouid=104157118977035267335&rtpof=true&sd=true"
