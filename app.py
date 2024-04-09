@@ -18,7 +18,7 @@ px.set_mapbox_access_token(MAPBOX_ACCESS_TOKEN)
 
 
 # Shareable link to the CSV file on Google Drive
-google_drive_link = "https://docs.google.com/spreadsheets/d/1AiK_HFMKW20jM9fbSVRSIu2cNa0nDQWN/edit?usp=sharing&ouid=104157118977035267335&rtpof=true&sd=true"
+google_drive_link = "https://drive.google.com/file/d/1NT-LMdsGUMsKei-0j89BufzxQLAjTgcU/view?usp=sharing"
 
 # Download the file from the link
 response = requests.get(google_drive_link)
@@ -28,7 +28,9 @@ with open("Total.csv", "wb") as f:
     f.write(response.content)
 
 # Read the CSV file into a Pandas DataFrame
-df = pd.read_csv("Total.csv", encoding='ISO-8859-1')
+#df = pd.read_csv("Total.csv", encoding='ISO-8859-1')
+df = pd.read_csv("Total.csv", encoding='ISO-8859-1', error_bad_lines=False, warn_bad_lines=True)
+
 # Read in the data
 #df = pd.read_csv('Downloads/Finished/Total.csv', encoding='ISO-8859-1')
 df['Latitude'] = pd.to_numeric(df['Latitude'], errors='coerce')
