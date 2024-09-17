@@ -7,30 +7,10 @@ from dash import dcc, html, dash_table
 from dash.dependencies import Input, Output
 import plotly.express as px
 import pandas as pd
-import requests
 
-# Your Mapbox access token
-MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZGFyZGV2IiwiYSI6ImNsdWNnbTltcDExdmYyam5pazdtOGZ1MGwifQ.IBDBUPNj10UCQ9jMTV-pjA"
-px.set_mapbox_access_token(MAPBOX_ACCESS_TOKEN)
-
-# Modified link for direct download from Google Drive
-google_drive_link = "https://drive.google.com/uc?export=download&id=1ZMR271ltgXgYfBNmzd4rb49H2IzpqJXx"
-
-# Download the file from the link with error handling
-try:
-    response = requests.get(google_drive_link)
-    response.raise_for_status()  # Raise an error for bad responses
-except requests.RequestException as e:
-    print(f"Error downloading CSV: {e}")
-    df = pd.DataFrame()  # Create an empty DataFrame if the download fails
-
-# Save the downloaded content to a local file
-data_file = os.path.join(os.getcwd(), "Total.csv")
-with open(data_file, "wb") as f:
-    f.write(response.content)
-
-# Read the CSV file into a Pandas DataFrame
-df = pd.read_csv(data_file, encoding='ISO-8859-1', on_bad_lines='skip')
+# Load the static dataset from Google Cloud Storage
+data_file_url = "https://storage.googleapis.com/nich-app-data/Total.csv"
+df = pd.read_csv(data_file_url, encoding='ISO-8859-1', on_bad_lines='skip')
 
 # Further processing...
 df['Latitude'] = pd.to_numeric(df['Latitude'], errors='coerce')
