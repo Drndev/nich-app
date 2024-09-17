@@ -81,13 +81,12 @@ def update_content(selected_siccodes, selected_companynames, n_clicks):
     if selected_companynames:
         filtered_df = filtered_df[filtered_df['CompanyName'].isin(selected_companynames)]
 
+    # Use a simple map style for testing
     fig = px.scatter_mapbox(filtered_df, lat="Latitude", lon="Longitude",
                             hover_name="CompanyName",
-                            hover_data={"CompanyNumber": True, "SICCode": True, "RegAddress.AddressLine1": True},
-                            zoom=7.4,
-                            mapbox_style="mapbox://styles/mapbox/satellite-streets-v12")
-    fig.update_layout(mapbox_center={"lat": 54.637039, "lon": -6.627607},
-                      margin={"r":0,"t":0,"l":0,"b":0}, autosize=True)
+                            zoom=7,
+                            mapbox_style="open-street-map")  # Simplified map style
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, autosize=True)
 
     point_count = f"Number of points plotted: {len(filtered_df)}"
 
