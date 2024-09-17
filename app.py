@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
 import dash
 from dash import dcc, html, dash_table
 from dash.dependencies import Input, Output
@@ -15,15 +16,21 @@ px.set_mapbox_access_token(MAPBOX_ACCESS_TOKEN)
 # Modified link for direct download from Google Drive
 google_drive_link = "https://drive.google.com/uc?export=download&id=1ZMR271ltgXgYfBNmzd4rb49H2IzpqJXx"
 
-# Download the file from the link
-response = requests.get(google_drive_link)
+# Download the file from the link with error handling
+try:
+    response = requests.get(google_drive_link)
+    response.raise_for_status()  # Raise an error for bad responses
+except requests.RequestException as e:
+    print(f"Error downloading CSV: {e}")
+    df = pd.DataFrame()  # Create an empty DataFrame if the download fails
 
 # Save the downloaded content to a local file
-with open("Total.csv", "wb") as f:
+data_file = os.path.join(os.getcwd(), "Total.csv")
+with open(data_file, "wb") as f:
     f.write(response.content)
 
 # Read the CSV file into a Pandas DataFrame
-df = pd.read_csv("Total.csv", encoding='ISO-8859-1', on_bad_lines='skip')
+df = pd.read_csv(data_file, encoding='ISO-8859-1', on_bad_lines='skip')
 
 # Further processing...
 df['Latitude'] = pd.to_numeric(df['Latitude'], errors='coerce')
@@ -73,7 +80,6 @@ app.layout = html.Div([
     ]),
     html.Div(id='table-container', style={'width': '80%', 'margin': '0 auto', 'marginTop': '20px'}),
 ], style={'padding': '20px', 'backgroundColor': '#f0f0f0', 'font-family': 'Roboto', 'margin': '0 auto', 'width': '90%'})
-
 
 # Callback to update the map and the table based on filters
 @app.callback(
@@ -128,4 +134,4 @@ def reset_filters(n_clicks):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8051)
+    app.run_server(debug=True, port=int(os.environ.get('PORT', 8050)))  # Adjust port for Heroku
