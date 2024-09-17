@@ -10,7 +10,7 @@ import pandas as pd
 
 # Load the static dataset from Google Cloud Storage
 data_file_url = "https://storage.googleapis.com/nich-app-data/Total.csv"
-df = pd.read_csv(data_file_url, encoding='ISO-8859-1', on_bad_lines='skip')
+df = pd.read_csv(data_file_url, encoding='ISO-8859-1', on_bad_lines='skip', low_memory=False)
 
 # Further processing...
 df['Latitude'] = pd.to_numeric(df['Latitude'], errors='coerce')
